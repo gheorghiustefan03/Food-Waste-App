@@ -1,24 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=DynaPuff:wght@400;700&display=swap');
+
 .navbar {
     display: flex;
-    justify-content: center;
     align-items: center;
-    height: 60px; 
+    justify-content: space-between;
+    height: 80px; 
     background-color: #48392A; 
+    color: #FBF2C0;
+    font-family: 'DynaPuff', sans-serif;
+    font-size: 24px;
+    border-radius: 10px;
+    overflow: hidden;
 }
 
-.navbar ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+.navbar-logo {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.navbar-user {
+    margin-left: auto;
     display: flex;
+    align-items: center;
 }
 
-.navbar li {
-    margin: 0 15px; /* Adjust the spacing between items as needed */
+.navbar-username {
+    margin-right: 20px;
+    font-size: 25px;
+}
+.navbar-logout{
+    margin-right: 20px;
+    font-size: 20px;    
 }
 
-.navbar a {
-    color: white; /* Adjust the text color as needed */
-    text-decoration: none;
-    font-size: 16px; /* Adjust the font size as needed */
-}

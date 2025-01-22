@@ -8,10 +8,10 @@ const Navbar = () => {
             <div className="navbar-logo">
                 <h1>Food Waste App</h1>
             </div>
-            <ul className="navbar-links">
-                
-                
-            </ul>
+                <div className="navbar-user">
+                    <span className="navbar-logout">Log out</span>
+                    <span className="navbar-username">Username</span>
+                </div>
         </nav>
     );
 };

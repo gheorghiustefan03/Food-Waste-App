@@ -1,12 +1,14 @@
 const { foodItemTable } = require('../models');
+const {Op} = require('sequelize');
 
 const foodItemController = {
     createFoodItem: async (req, res) => {
         try{
-            const {name, expirationDate} = req.body;
+            const {name, expirationDate, UserId} = req.body;
             const payload = {
                 name,
-                expirationDate
+                expirationDate,
+                UserId
             };
             const createdFoodItem = await foodItemTable.create(payload);
             res.status(200).json(createdFoodItem);
@@ -57,7 +59,6 @@ const foodItemController = {
             foodItem.update(payload);
             res.status(200).json(foodItem);
         } catch (error) {
-            console.log("error in controller")
             console.log(error);
             res.status(500).json({ message: 'Server error' });
         }
@@ -77,6 +78,22 @@ const foodItemController = {
             res.status(500).json({ message: 'Server error' });
         }
     },
+    getFoodItemsByUser: async(req, res) => {
+        try{
+            const {rows} = await foodItemTable.findAndCountAll({
+                where: {
+                    UserId: {
+                        [Op.eq]: req.params.userId
+                    }
+                }
+            });
+            console.log(rows);
+            res.status(200).json(rows);
+        } catch(error){
+            console.log(error);
+            res.status(500).json({message: 'Server error'})
+        }
+    }
 }
 
 module.exports = foodItemController;

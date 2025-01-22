@@ -1,4 +1,4 @@
-const { foodItemTable } = require('../../models');
+const { userTable } = require('../../models');
 const { utils } = require('../../config');
 
 const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
@@ -14,9 +14,9 @@ const controller = {
             }
 
             const payload = req.body;
-            const { name, expirationDate } = payload;
+            const { name, expirationDate, UserId } = payload;
 
-            if ((name == null || expirationDate == null ) && req.method === 'POST') {
+            if ((name == null || expirationDate == null || UserId == null) && req.method === 'POST') {
                 errors.push("Every attribute mandatory for creating food item");
             }
 
@@ -30,6 +30,10 @@ const controller = {
                 if (!dateRegex.test(expirationDate)) {
                     errors.push("Date format for expiration date invalid")
                 }
+            }
+            if(UserId != null){
+                if(await userTable.findByPk(UserId) === null)
+                    errors.push("User with UserId provided not in table");
             }
 
             if (errors.length === 0)

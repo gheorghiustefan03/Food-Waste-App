@@ -1,13 +1,10 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import axios from 'axios';
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
-import Home from "./components/Home/Home";
-import Login from "./components/Login/Login";
+import axios from "axios";
 
 const App = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate(); 
+
   useEffect(() => {
     const checkAuthentication = async () => {
       try {
@@ -27,12 +24,9 @@ const App = () => {
   }, [navigate]);
 
   return (
-    <Router>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/home" element={<Home />} />
-      </Routes>
-    </Router>
+    <div>
+      <h1>Loading...</h1>
+    </div>
   );
 };
 
