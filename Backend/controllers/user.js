@@ -1,6 +1,5 @@
 const { userTable } = require('../models');
 const bcrypt = require('bcrypt');
-const fs = require("fs");
 const jwt = require('jsonwebtoken');
 
 const hashPassword = async (password) => {
@@ -71,16 +70,13 @@ const userController = {
                 res.status(404).json({ message: `No user with id ${req.params.id} in database` });
                 return;
             }
-            const { firstName, lastName, email, password, DepartmentId } = req.body;
+            const { firstName, lastName, email, password} = req.body;
             const payload = {
                 firstName,
                 lastName,
                 email,
-                password,
-                DepartmentId
+                password
             };
-            if (payload.password != null)
-                payload.password = hashPassword(payload.password);
             user.update(payload);
             res.status(200).json(user);
         } catch (error) {
@@ -132,17 +128,6 @@ const userController = {
                     }
                     else {
                         const user = await userTable.findByPk(decodedToken.id);
-                        let pfpPath = __dirname + `\\..\\profile_pics\\${user.id}.`
-                        if (fs.existsSync(pfpPath + 'png'))
-                            pfpPath += 'png';
-                        else if (fs.existsSync(pfpPath + 'jpg'))
-                            pfpPath += 'jpg';
-                        else if (fs.existsSync(pfpPath + 'jpeg'))
-                            pfpPath += 'jpeg'
-                        else {
-                            pfpPath = 'none';
-                        }
-                        user.dataValues.profilePicFile = pfpPath;
                         console.log(user);
                         res.status(200).json({ user: user });
                     }
@@ -152,6 +137,7 @@ const userController = {
                 res.status(400).json({ message: 'No user logged in.' });
             }
         } catch (error) {
+            console.log(error);
             res.status(500).json({ message: 'Server error' });
         }
 

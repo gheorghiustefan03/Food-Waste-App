@@ -1,7 +1,5 @@
-const { userTable, departmentTable } = require('../../models');
+const { userTable } = require('../../models');
 const { utils } = require('../../config');
-const path = require('node:path');
-const fs = require("fs");
 
 const emailRegex = /^[\w\-\.]+@([\w-]+\.)+[\w-]{2,}$/;
 const nameRegex = /^[a-zA-Z-\s]+$/
@@ -57,20 +55,10 @@ const controller = {
                     }
                 }
             }
-            if (req.file != null) {
-                const validExts = /jpg|jpeg|png/;
-                if (!validExts.test(path.extname(req.file.originalname)) || !validExts.test(req.file.mimetype)) {
-                    errors.push("Invalid profile picture file extension");
-                };
-            }
 
             if (errors.length === 0)
                 next();
             else {
-                if (req.file != null)
-                    fs.unlink(req.file.path, err => {
-                        if (err) throw err;
-                    });
                 const jsonMsg = { ...errors };
                 res.status(400).json({ message: jsonMsg });
             }
