@@ -1,5 +1,5 @@
-
-.login-container {
+/* Register container styles */
+.register-container {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -8,30 +8,31 @@
     font-family: 'DynaPuff', sans-serif;
 }
 
-.login-box {
+/* Register box */
+.register-box {
     background-color: #fdf7d7;
     padding: 30px;
     border-radius: 10px;
-    width: 300px;
+    width: 350px;
     text-align: center;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-
-.login-title {
+/* Title */
+.register-title {
     font-size: 24px;
     color: #48392A;
     margin-bottom: 20px;
 }
 
-
-.login-form {
+/* Form styles */
+.register-form {
     display: flex;
     flex-direction: column;
     gap: 15px;
 }
 
-
+/* Input fields */
 .form-input {
     padding: 10px;
     font-size: 16px;
@@ -42,8 +43,8 @@
     color: #48392A;
 }
 
-
-.login-button {
+/* Button */
+.register-button {
     padding: 10px;
     font-size: 16px;
     font-weight: bold;
@@ -54,23 +55,23 @@
     cursor: pointer;
 }
 
-.login-button:hover {
+.register-button:hover {
     background-color: #a85642;
 }
 
-
-.signup-prompt {
+/* Login prompt */
+.login-prompt {
     margin-top: 10px;
     font-size: 14px;
     color: #48392A;
 }
 
-.signup-link {
+.login-link {
     color: #C06E52;
     text-decoration: none;
     font-weight: bold;
 }
 
-.signup-link:hover {
+.login-link:hover {
     text-decoration: underline;
 }

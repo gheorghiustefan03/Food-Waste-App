@@ -1,33 +1,23 @@
-const Register = () => {
-    return(
-        <div className="container">
-        <div>
-            <h1>Register</h1>
-            <form action="">
-                <div>
-                    <input type="email" className=""/>
-                    <label htmlFor=''>Email</label>
-                </div>
-                <div>
-                    <input type="text" className=""/>
-                    <label htmlFor=''>First name</label>
-                </div>
-                <div>
-                    <input type="text" className=""/>
-                    <label htmlFor=''>Last name</label>
-                </div>
-                <div>
-                    <input type="password" />
-                    <label htmlFor=''>Password</label>
-                </div>
-                <button type="submit">Register</button>
-                <div>
-                    <span>Already have an account? Log In</span>
-                </div>
-            </form>
-        </div>
-    </div>
-    )
-}
+import './Register.css';
 
-export default Register
+const Register = () => {
+    return (
+        <div className="register-container">
+            <div className="register-box">
+                <h1 className="register-title">Register</h1>
+                <form className="register-form">
+                    <input type="email" className="form-input" placeholder="Email" />
+                    <input type="text" className="form-input" placeholder="First Name" />
+                    <input type="text" className="form-input" placeholder="Last Name" />
+                    <input type="password" className="form-input" placeholder="Password" />
+                    <button type="submit" className="register-button">Register</button>
+                    <div className="login-prompt">
+                        Already have an account? <a href="/login" className="login-link">Log In</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    );
+};
+
+export default Register;

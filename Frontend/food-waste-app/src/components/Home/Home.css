@@ -65,3 +65,98 @@ body{
 .add-item-button:hover {
     background-color: #a85642;
 }
+
+.search-container {
+    display: flex;
+    margin-top: 10px;
+    margin-left: 10px; /* Align to the left of the friends list */
+}
+
+.search-box {
+    padding: 5px;
+    font-size: 14px;
+    border: 1px solid #C06E52;
+    border-radius: 5px 0 0 5px;
+    outline: none;
+    width: 120px;
+}
+
+.search-button {
+    padding: 5px 10px;
+    font-size: 14px;
+    background-color: #C06E52;
+    color: #fff;
+    border: none;
+    border-radius: 0 5px 5px 0;
+    cursor: pointer;
+}
+
+.search-button:hover {
+    background-color: #a85642;
+}
+
+.food-items-container {
+    margin-top: 30px; /* Ensure it starts after the friends list */
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #fdfdfd;
+    max-width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    align-self:flex-end;
+}
+
+.food-items-container h2 {
+    margin-bottom: 20px;
+    color: #48392A;
+}
+
+.food-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #fff;
+}
+
+.food-item.expiring-soon {
+    background-color: #ffcccc; /* Light red background for expiring items */
+}
+
+.remove-button {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.remove-button:hover {
+    background-color: #c0392b;
+}
+
+.add-button {
+    background-color: #2ecc71;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.add-button:hover {
+    background-color: #27ae60;
+}
+
+.error-message {
+    color: red;
+    margin-top: 10px;
+    font-size: 14px;
+}
