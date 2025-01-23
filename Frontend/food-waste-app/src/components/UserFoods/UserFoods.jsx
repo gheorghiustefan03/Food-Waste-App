@@ -14,7 +14,7 @@ const UserFoods = () => {
   useEffect(() => {
     const fetchUserFoods = async () => {
       try {
-        const response = await axios.get(`http://localhost:1234/api/foodItem/getByUserId/${userId}`);
+        const response = await axios.get(`https://food-waste-app-api.azurewebsites.net/api/foodItem/getByUserId/${userId}`);
         setFoodItems(response.data);
         setUser(response.data);
 

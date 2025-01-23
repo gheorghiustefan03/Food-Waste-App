@@ -9,7 +9,7 @@ const Navbar = () => {
     useEffect(() => {
       const fetchUserFoods = async () => {
         try {
-            const userResponse = await axios.get(`http://localhost:1234/api/user/getLoggedInUser`, {withCredentials: true});
+            const userResponse = await axios.get(`https://food-waste-app-api.azurewebsites.net/api/user/getLoggedInUser`, {withCredentials: true});
             setUser(userResponse.data);
         } catch (err) {
           console.error(err);
@@ -23,7 +23,7 @@ const Navbar = () => {
     const navigate = useNavigate();
 
     const handleLogout = () => {
-        axios.get("http://localhost:1234/api/user/logout", {withCredentials: true});
+        axios.get("https://food-waste-app-api.azurewebsites.net/api/user/logout", {withCredentials: true});
         navigate('/login');
     };
 

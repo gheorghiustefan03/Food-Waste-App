@@ -8,7 +8,7 @@ const App = () => {
   useEffect(() => {
     const checkAuthentication = async () => {
       try {
-        const response = await axios.get("http://localhost:1234/api/user/getLoggedInUser", {withCredentials: true});
+        const response = await axios.get("https://food-waste-app-api.azurewebsites.net/api/user/getLoggedInUser", {withCredentials: true});
         if (response.status === 200) {
           navigate("/home");
         } else {

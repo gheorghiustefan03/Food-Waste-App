@@ -21,7 +21,7 @@ const Register = () => {
     const handleFormSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:1234/api/user/create', formData);
+            const response = await axios.post('https://food-waste-app-api.azurewebsites.net/api/user/create', formData);
             if (response.status === 200) {
                 navigate('/login');
             }

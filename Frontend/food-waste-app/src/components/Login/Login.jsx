@@ -13,7 +13,7 @@ const Login = () => {
         e.preventDefault();
 
         try {
-            await axios.post('http://localhost:1234/api/user/login', {
+            await axios.post('https://food-waste-app-api.azurewebsites.net/api/user/login', {
                 email: email,
                 password: password,
             }, {withCredentials: true});

@@ -6,6 +6,7 @@ const resetDb = async (req, res) => {
         await db.sync({ force: true });
         res.status(200).json({ message: "Database reset" });
     } catch (error) {
+        console.log(error);
         res.status(500).json({ message: "Server error" });
     }
 }
