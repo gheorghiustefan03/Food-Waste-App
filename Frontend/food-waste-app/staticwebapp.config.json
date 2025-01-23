@@ -4,5 +4,19 @@
         "route": "/*",
         "rewrite": "/index.html"
       }
-    ]
+    ],
+    "navigationFallback": {
+      "rewrite": "/index.html",
+      "exclude": [
+        "/static/*",  
+        "/assets/*",  
+        "*.js",       
+        "*.css",      
+        "*.ico",      
+        "*.png",      
+        "*.jpg",      
+        "*.svg"       
+      ]
+    }
   }
+  
