@@ -1,17 +1,23 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import './UserFoods.css';
+import Navbar from '../Home/Navbar.jsx'
 
 const UserFoods = () => {
   const { userId } = useParams();
+  const navigate = useNavigate();
   const [foodItems, setFoodItems] = useState([]);
   const [error, setError] = useState(null);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     const fetchUserFoods = async () => {
       try {
         const response = await axios.get(`http://localhost:1234/api/foodItem/getByUserId/${userId}`);
         setFoodItems(response.data);
+        setUser(response.data);
+
       } catch (err) {
         console.error(err);
         setError("Failed to fetch user food items.");
@@ -21,21 +27,50 @@ const UserFoods = () => {
     fetchUserFoods();
   }, [userId]);
 
+
+
+  const handleBack = () => {
+    navigate(-1);
+  };
+
+  const isExpiringSoon = (date) => {
+    const today = new Date();
+    const expiration = new Date(date);
+    const diffInDays = (expiration - today) / (1000 * 60 * 60 * 24);
+    return diffInDays <= 2;
+  };
+
   return (
     <div>
-      <h1>User Foods</h1>
+      <Navbar />
+      <div className="user-foods-container">
+        <button className="back-button" onClick={handleBack}>Back</button>
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
+        <div className="user-food-items-container">
+        {user && (
+          <h2>
+            <span className="top-username">{user.firstName} {user.lastName}</span>
+          </h2>
+        )}
 
-      {!foodItems.length && !error && <p>Loading food items...</p>}
+          {error && <p style={{ color: "red" }}>{error}</p>}
 
-      <ul>
-        {foodItems.map((item) => (
-          <li key={item.id}>
-            <strong>{item.name}</strong>: {item.expirationDate} - {item.UserId}
-          </li>
-        ))}
-      </ul>
+          {!foodItems.length && !error && <p>No items..</p>}
+
+          {foodItems.length > 0 && (
+            <div className="food-items-list">
+              {foodItems.map((item) => (
+                <div
+                  key={item.id}
+                  className={`food-item ${isExpiringSoon(item.expirationDate) ? 'expiring-soon' : ''}`}
+                >
+                  <span>{item.name} - Expires on {new Date(item.expirationDate).toLocaleDateString()}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 };

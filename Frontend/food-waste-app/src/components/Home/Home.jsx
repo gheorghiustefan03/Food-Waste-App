@@ -13,8 +13,9 @@ const Home = () => {
     const [user, setUser] = useState(null);
     const [newFood, setNewFood] = useState({ name: '', expirationDate: '' });
     const [error, setError] = useState('');
+    const [friends, setFriends] = useState([]);
+    const [selectedFriend, setSelectedFriend] = useState(null);
 
-    // Fetch user info only once when the component mounts
     useEffect(() => {
         const checkAuthentication = async () => {
             try {
@@ -22,7 +23,7 @@ const Home = () => {
                 if (response.status === 400) {
                     navigate("/login");
                 } else {
-                    setUser(response.data); // Set user only if not already set
+                    setUser(response.data);
                 }
             } catch (error) {
                 console.error("Error checking authentication:", error);
@@ -31,22 +32,34 @@ const Home = () => {
         };
 
         checkAuthentication();
-    }, [navigate]); // Run this effect only once when the component mounts
+    }, [navigate]);
 
-    // Fetch food items once the user is authenticated
     useEffect(() => {
         if (user) {
-            const fetchFoodItems = async () => {
+            const fetchData = async () => {
                 try {
-                    const response = await axios.get(`http://localhost:1234/api/foodItem/getByUserId/${user.user.id}`, { withCredentials: true });
-                    setFoodItems(response.data);
+                    const foodResponse = await axios.get(`http://localhost:1234/api/foodItem/getByUserId/${user.user.id}`, { withCredentials: true });
+                    setFoodItems(foodResponse.data);
+
+                    const friendsResponse = await axios.get(`http://localhost:1234/api/follows/getFriends/${user.user.id}`, { withCredentials: true });
+                    const friendPromises = friendsResponse.data.map(async (friend) => {
+                        const userResponse = await axios.get(`http://localhost:1234/api/user/get/${friend.followeeId}`);
+                        return {
+                            id: friend.followeeId,
+                            name: `${userResponse.data.firstName} ${userResponse.data.lastName}`
+                        };
+                    });
+
+                    const friendData = await Promise.all(friendPromises);
+                    setFriends(friendData);
                 } catch (err) {
-                    console.error('Error fetching food items:', err);
+                    console.error('Error fetching data:', err);
                 }
             };
-            fetchFoodItems();
+
+            fetchData();
         }
-    }, [user]); // Only fetch food items if the user is set
+    }, [user]);
 
     const handleOpenModal = () => setShowModal(true);
     const handleCloseModal = () => {
@@ -66,8 +79,8 @@ const Home = () => {
             return;
         }
         try {
-            if (user) {  // Only add food if user is set
-                newFood.UserId = user.user.id;  // Use the already set user from the state
+            if (user) { 
+                newFood.UserId = user.user.id;
                 const response = await axios.post("http://localhost:1234/api/foodItem/create", newFood, { withCredentials: true });
                 setFoodItems([...foodItems, response.data]);
                 handleCloseModal();
@@ -87,6 +100,40 @@ const Home = () => {
         }
     };
 
+    const handleFollow = async () => {
+        try {
+            const users = await axios.get("http://localhost:1234/api/user/get");
+            const foundUser = users.data.find(otherUser => otherUser.email === searchTerm);
+            if (foundUser) {
+                const response = await axios.post("http://localhost:1234/api/follows/create", { 
+                    followerId: user.user.id, 
+                    followeeId: foundUser.id 
+                }, { withCredentials: true });
+
+                if (response.status === 200) {
+                    setFriends([...friends, { id: foundUser.id, name: `${foundUser.firstName} ${foundUser.lastName}` }]);
+                    setSearchTerm('');
+                }
+            }
+        } catch (error) {
+            console.error('Error following user:', error);
+        }
+    };
+
+    const handleRemoveFriend = async (friendId) => {
+        try {
+            await axios.delete(`http://localhost:1234/api/follows/delete/${user.user.id}/${friendId}`, { withCredentials: true });
+            setFriends(friends.filter((friend) => friend.id !== friendId));
+            setSelectedFriend(null);
+        } catch (err) {
+            console.error('Error removing friend:', err);
+        }
+    };
+
+    const handleFriendClick = (friendId) => {
+        setSelectedFriend(selectedFriend === friendId ? null : friendId);
+    };
+
     const isExpiringSoon = (date) => {
         const today = new Date();
         const expiration = new Date(date);
@@ -98,51 +145,75 @@ const Home = () => {
         <div className="home">
             <Navbar />
             <div className="home-content">
-                <table className="table-as-list">
-                    <thead>
-                        <tr>
-                            <th>Friends</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>John Doe</td>
-                        </tr>
-                        <tr>
-                            <td>Jane Smith</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <div className="search-container">
-                    <input
-                        type="text"
-                        className="search-box"
-                        placeholder="Search"
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                    <button className="search-button">Follow</button>
-                </div>
-                {foodItems.length > 0 && (
-                    <div className="food-items-container">
-                        <h2>Food Items</h2>
-                        <div className="food-items-list">
-                            {foodItems.map((item) => (
-                                <div
-                                    key={item.id}
-                                    className={`food-item ${isExpiringSoon(item.expirationDate) ? 'expiring-soon' : ''}`}
-                                >
-                                    <span>{item.name} - Expires on {new Date(item.expirationDate).toLocaleDateString()}</span>
-                                    <button className="remove-button" onClick={() => handleRemoveFood(item.id)}>
-                                        Remove
-                                    </button>
-                                </div>
-                            ))}
-                        </div>
+                <div className="friends-list-container">
+                    <table className="table-as-list">
+                        <thead>
+                            <tr>
+                                <th>Friends</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {friends.length > 0 ? (
+                                friends.map((friend) => (
+                                    <tr key={friend.id}>
+                                        <td
+                                            className="friend-name"
+                                            onClick={() => handleFriendClick(friend.id)}
+                                        >
+                                            {friend.name}
+                                            {selectedFriend === friend.id && (
+                                                <div className="dropdown-menu">
+                                                    <button
+                                                        className="dropdown-item"
+                                                        onClick={() => handleRemoveFriend(friend.id)}
+                                                    >
+                                                        Remove
+                                                    </button>
+                                                    <button
+                                                        className="dropdown-item"
+                                                        onClick={() => navigate(`/foods/${friend.id}`)}
+                                                    >
+                                                        View Food List
+                                                    </button>
+                                                </div>
+                                            )}
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td>No friends yet.</td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
+                    <div className="search-container">
+                        <input
+                            type="email"
+                            className="search-box"
+                            placeholder="Search by email"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                        <button className="search-button" onClick={handleFollow}>Follow</button>
                     </div>
-                )}
+                </div>
                 <button className="add-item-button" onClick={handleOpenModal}>Add Food Item</button>
-                <canvas id="backgroundCanvas" className="background-canvas"></canvas>
+                <div className="food-items-container">
+                    <div className="food-items-list">
+                        {foodItems.map((item) => (
+                            <div
+                                key={item.id}
+                                className={`food-item ${isExpiringSoon(item.expirationDate) ? 'expiring-soon' : ''}`}
+                            >
+                                <span>{item.name} - Expires on {new Date(item.expirationDate).toLocaleDateString()}</span>
+                                <button className="remove-button" onClick={() => handleRemoveFood(item.id)}>
+                                    Remove
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+                </div>
             </div>
             <Modal show={showModal} handleClose={handleCloseModal}>
                 <h2>Add a Food Item</h2>

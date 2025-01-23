@@ -4,7 +4,6 @@ body{
 
 }
 
-
 .table-as-list {
     
     width: 15%;
@@ -69,7 +68,7 @@ body{
 .search-container {
     display: flex;
     margin-top: 10px;
-    margin-left: 10px; /* Align to the left of the friends list */
+    margin-left: 10px; 
 }
 
 .search-box {
@@ -96,16 +95,19 @@ body{
 }
 
 .food-items-container {
-    margin-top: 30px; /* Ensure it starts after the friends list */
+    position: absolute;
+    margin-top:45px;
+    left: 50%;
+    transform: translateX(-50%);
+    max-width: 200px;
+    width: 10px;
     padding: 20px;
+    background-color: #fdfdfd;
     border: 1px solid #ccc;
     border-radius: 10px;
-    background-color: #fdfdfd;
-    max-width: 80%;
-    margin-left: auto;
-    margin-right: auto;
+    z-index: 10;
     text-align: center;
-    align-self:flex-end;
+    left: 120px;
 }
 
 .food-items-container h2 {
@@ -125,7 +127,7 @@ body{
 }
 
 .food-item.expiring-soon {
-    background-color: #ffcccc; /* Light red background for expiring items */
+    background-color: #ffcccc;
 }
 
 .remove-button {
@@ -142,7 +144,7 @@ body{
 }
 
 .add-button {
-    background-color: #2ecc71;
+    background-color: #a85642;
     color: white;
     border: none;
     padding: 10px 15px;
@@ -151,12 +153,9 @@ body{
     margin-top: 10px;
 }
 
-.add-button:hover {
-    background-color: #27ae60;
-}
-
 .error-message {
     color: red;
     margin-top: 10px;
     font-size: 14px;
 }
+
