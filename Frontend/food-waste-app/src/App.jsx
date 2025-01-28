@@ -8,7 +8,7 @@ const App = () => {
   useEffect(() => {
     const checkAuthentication = async () => {
       try {
-        const response = await axios.get(`${import.meta.env.VITE_API_HOST}/api/user/getLoggedInUser`, {withCredentials: true});
+        const response = await axios.get(`${VITE_API_HOST}/api/user/getLoggedInUser`, {withCredentials: true});
         if (response.status === 200) {
           navigate("/home");
         } else {

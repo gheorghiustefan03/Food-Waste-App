@@ -21,7 +21,7 @@ const Register = () => {
     const handleFormSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post(`${process.env.VITE_API_HOST}/api/user/create`, formData);
+            const response = await axios.post(`${VITE_API_HOST}/api/user/create`, formData);
             if (response.status === 200) {
                 navigate('/login');
             }

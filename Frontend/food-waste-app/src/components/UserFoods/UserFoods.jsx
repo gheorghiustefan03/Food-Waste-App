@@ -14,7 +14,7 @@ const UserFoods = () => {
   useEffect(() => {
     const fetchUserFoods = async () => {
       try {
-        const response = await axios.get(`${process.env.VITE_API_HOST}/api/foodItem/getByUserId/${userId}`);
+        const response = await axios.get(`${VITE_API_HOST}/api/foodItem/getByUserId/${userId}`);
         setFoodItems(response.data);
         setUser(response.data);
 
