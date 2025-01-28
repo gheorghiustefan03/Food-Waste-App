@@ -9,7 +9,7 @@ const Navbar = () => {
     useEffect(() => {
       const fetchUserFoods = async () => {
         try {
-            const userResponse = await axios.get(`${import.meta.env.VITE_API_HOST}/api/user/getLoggedInUser`, {withCredentials: true});
+            const userResponse = await axios.get(`${process.env.VITE_API_HOST}/api/user/getLoggedInUser`, {withCredentials: true});
             setUser(userResponse.data);
         } catch (err) {
           console.error(err);
