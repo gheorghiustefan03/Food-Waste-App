@@ -19,7 +19,7 @@ const Home = () => {
     useEffect(() => {
         const checkAuthentication = async () => {
             try {
-                const response = await axios.get("https://food-waste-app-api.azurewebsites.net/api/user/getLoggedInUser", { withCredentials: true });
+                const response = await axios.get(`${import.meta.env.VITE_API_HOST}/api/user/getLoggedInUser`, { withCredentials: true });
                 if (response.status === 400) {
                     navigate("/login");
                 } else {
@@ -38,12 +38,12 @@ const Home = () => {
         if (user) {
             const fetchData = async () => {
                 try {
-                    const foodResponse = await axios.get(`https://food-waste-app-api.azurewebsites.net/api/foodItem/getByUserId/${user.user.id}`, { withCredentials: true });
+                    const foodResponse = await axios.get(`${import.meta.env.VITE_API_HOST}/api/foodItem/getByUserId/${user.user.id}`, { withCredentials: true });
                     setFoodItems(foodResponse.data);
 
-                    const friendsResponse = await axios.get(`https://food-waste-app-api.azurewebsites.net/api/follows/getFriends/${user.user.id}`, { withCredentials: true });
+                    const friendsResponse = await axios.get(`${import.meta.env.VITE_API_HOST}/api/follows/getFriends/${user.user.id}`, { withCredentials: true });
                     const friendPromises = friendsResponse.data.map(async (friend) => {
-                        const userResponse = await axios.get(`https://food-waste-app-api.azurewebsites.net/api/user/get/${friend.followeeId}`);
+                        const userResponse = await axios.get(`${import.meta.env.VITE_API_HOST}/api/user/get/${friend.followeeId}`);
                         return {
                             id: friend.followeeId,
                             name: `${userResponse.data.firstName} ${userResponse.data.lastName}`
@@ -81,7 +81,7 @@ const Home = () => {
         try {
             if (user) { 
                 newFood.UserId = user.user.id;
-                const response = await axios.post("https://food-waste-app-api.azurewebsites.net/api/foodItem/create", newFood, { withCredentials: true });
+                const response = await axios.post(`${import.meta.env.VITE_API_HOST}/api/foodItem/create`, newFood, { withCredentials: true });
                 setFoodItems([...foodItems, response.data]);
                 handleCloseModal();
             }
@@ -93,7 +93,7 @@ const Home = () => {
 
     const handleRemoveFood = async (id) => {
         try {
-            await axios.delete(`https://food-waste-app-api.azurewebsites.net/api/foodItem/delete/${id}`, { withCredentials: true });
+            await axios.delete(`${import.meta.env.VITE_API_HOST}/api/foodItem/delete/${id}`, { withCredentials: true });
             setFoodItems(foodItems.filter((item) => item.id !== id));
         } catch (err) {
             console.error('Error removing food item:', err);
@@ -102,10 +102,10 @@ const Home = () => {
 
     const handleFollow = async () => {
         try {
-            const users = await axios.get("https://food-waste-app-api.azurewebsites.net/api/user/get");
+            const users = await axios.get(`${import.meta.env.VITE_API_HOST}/api/user/get`);
             const foundUser = users.data.find(otherUser => otherUser.email === searchTerm);
             if (foundUser) {
-                const response = await axios.post("https://food-waste-app-api.azurewebsites.net/api/follows/create", { 
+                const response = await axios.post(`${import.meta.env.VITE_API_HOST}/api/follows/create`, { 
                     followerId: user.user.id, 
                     followeeId: foundUser.id 
                 }, { withCredentials: true });
@@ -122,7 +122,7 @@ const Home = () => {
 
     const handleRemoveFriend = async (friendId) => {
         try {
-            await axios.delete(`https://food-waste-app-api.azurewebsites.net/api/follows/delete/${user.user.id}/${friendId}`, { withCredentials: true });
+            await axios.delete(`${import.meta.env.VITE_API_HOST}/api/follows/delete/${user.user.id}/${friendId}`, { withCredentials: true });
             setFriends(friends.filter((friend) => friend.id !== friendId));
             setSelectedFriend(null);
         } catch (err) {

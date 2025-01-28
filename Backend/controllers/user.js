@@ -31,7 +31,8 @@ const userController = {
             const createdUser = await userTable.create(payload);
             const token = genToken(createdUser.id);
             const secure = process.env.RUN_MODE === 'LOCAL' ? false : true
-            res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000, secure: secure, sameSite: 'None' });
+            const sameSite = process.env.RUN_MODE === 'LOCAL' ? 'Strict' : 'None';
+            res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000, secure: secure, sameSite: sameSite });
             res.status(200).json(createdUser);
         } catch (error) {
             console.log(error);
@@ -110,7 +111,9 @@ const userController = {
             if (result == true) {
                 const token = genToken(user.id);
                 const secure = process.env.RUN_MODE === 'LOCAL' ? false : true
-                res.cookie('jwt', token, { maxAge: maxAge * 1000, httpOnly: true, secure: secure, sameSite: 'None' });
+                const sameSite = process.env.RUN_MODE === 'LOCAL' ? 'Strict' : 'None';
+                res.cookie('jwt', token, { maxAge: maxAge * 1000, httpOnly: true, secure: secure, sameSite: sameSite });
+                console.log(secure);
                 res.status(200).json({ message: 'Successfully logged in' });
                 return;
             }
@@ -147,7 +150,8 @@ const userController = {
     logout: async (req, res) => {
         try {
             const secure = process.env.RUN_MODE === 'LOCAL' ? false : true
-            res.cookie('jwt', '', { maxAge: 1 , httpOnly: true, secure: secure, sameSite: 'None'});
+            const sameSite = process.env.RUN_MODE === 'LOCAL' ? 'Strict' : 'None';
+            res.cookie('jwt', '', { maxAge: 1 , httpOnly: true, secure: secure, sameSite: sameSite});
             res.status(200).json({ message: 'Sucessfully logged out' });
         } catch (error) {
             res.status(500).json({ message: 'Server error' });
