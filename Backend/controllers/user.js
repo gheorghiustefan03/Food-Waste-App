@@ -30,7 +30,8 @@ const userController = {
             payload.password = await hashPassword(payload.password);
             const createdUser = await userTable.create(payload);
             const token = genToken(createdUser.id);
-            res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000, secure: true, sameSite: 'None' });
+            const secure = process.env.RUN_MODE === 'LOCAL' ? false : true
+            res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000, secure: secure, sameSite: 'None' });
             res.status(200).json(createdUser);
         } catch (error) {
             console.log(error);
@@ -108,7 +109,8 @@ const userController = {
             const result = await bcrypt.compare(req.body.password, user.password);
             if (result == true) {
                 const token = genToken(user.id);
-                res.cookie('jwt', token, { maxAge: maxAge * 1000, httpOnly: true, secure: true, sameSite: 'None' });
+                const secure = process.env.RUN_MODE === 'LOCAL' ? false : true
+                res.cookie('jwt', token, { maxAge: maxAge * 1000, httpOnly: true, secure: secure, sameSite: 'None' });
                 res.status(200).json({ message: 'Successfully logged in' });
                 return;
             }
@@ -144,7 +146,8 @@ const userController = {
     },
     logout: async (req, res) => {
         try {
-            res.cookie('jwt', '', { maxAge: 1 , httpOnly: true, secure: true, sameSite: 'None'});
+            const secure = process.env.RUN_MODE === 'LOCAL' ? false : true
+            res.cookie('jwt', '', { maxAge: 1 , httpOnly: true, secure: secure, sameSite: 'None'});
             res.status(200).json({ message: 'Sucessfully logged out' });
         } catch (error) {
             res.status(500).json({ message: 'Server error' });
